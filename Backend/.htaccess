@@ -1,0 +1,23 @@
+RewriteEngine On
+
+# Auth routes
+RewriteRule ^api/auth/login$ api/auth/login.php [L,QSA]
+RewriteRule ^api/auth/logout$ api/auth/logout.php [L,QSA]
+
+# Stock Manager routes
+RewriteRule ^api/stock/login$ api/stock/login.php [L,QSA]
+RewriteRule ^api/stock/logout$ api/stock/logout.php [L,QSA]
+RewriteRule ^api/stock/dashboard$ api/stock/dashboard.php [L,QSA]
+RewriteRule ^api/stock/profile$ api/stock/profile.php [L,QSA]
+RewriteRule ^api/stock/change-password$ api/stock/change_password.php [L,QSA]
+
+RewriteRule ^api/inventory/list$ api/inventory/list.php [L,QSA]
+RewriteRule ^api/inventory/add$ api/inventory/add.php [L,QSA]
+RewriteRule ^api/inventory/update$ api/inventory/update.php [L,QSA]
+RewriteRule ^api/inventory/delete$ api/inventory/delete.php [L,QSA]
+
+RewriteRule ^api/pricing/list$ api/pricing/list.php [L,QSA]
+RewriteRule ^api/pricing/update$ api/pricing/update.php [L,QSA]
+
+RewriteRule ^api/requests/list$ api/requests/list.php [L,QSA]
+RewriteRule ^api/requests/create$ api/requests/create.php [L,QSA]

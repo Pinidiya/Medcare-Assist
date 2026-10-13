@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedCare Assist — Authentication, Security & Encryption Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #1a1a2e;
+            background: #f8f9fc;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        @media print {
+            body { background: white; font-size: 11pt; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+            .container { max-width: 100%; padding: 0; }
+            section { box-shadow: none !important; border: 1px solid #e0e0e0 !important; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Cover Header */
+        .cover {
+            background: linear-gradient(135deg, #1a56db 0%, #3b82f6 50%, #60a5fa 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .cover h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .cover .subtitle {
+            font-size: 16px;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        .cover .meta {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .toc h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #1a56db;
+        }
+        .toc ol {
+            padding-left: 20px;
+        }
+        .toc li {
+            padding: 4px 0;
+            font-size: 13.5px;
+        }
+        .toc a {
+            color: #1a1a2e;
+            text-decoration: none;
+        }
+        .toc a:hover { color: #1a56db; }
+
+        /* Sections */
+        section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 35px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a56db;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f0fe;
+        }
+        h2 .num {
+            display: inline-block;
+            background: #1a56db;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            text-align: center;
+            line-height: 28px;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #374151;
+            margin: 18px 0 8px;
+        }
+        h3 .icon { margin-right: 6px; }
+
+        p { margin: 8px 0; color: #4b5563; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        thead th {
+            background: #f0f4ff;
+            color: #1a56db;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid #d4dffa;
+        }
+        tbody td {
+            padding: 9px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #374151;
+        }
+        tbody tr:hover { background: #f8faff; }
+
+        /* Code */
+        code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12.5px;
+            color: #d63384;
+        }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 12.5px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-yellow { background: #fef3c7; color: #92400e; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; }
+
+        /* Info Box */
+        .info-box {
+            border-left: 4px solid #3b82f6;
+            background: #eff6ff;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        .info-box.warning {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .info-box strong { color: #1e40af; }
+
+        /* Summary Table */
+        .summary-table thead th {
+            background: #1a56db;
+            color: white;
+        }
+        .summary-table tbody td:first-child {
+            font-weight: 600;
+            color: #1a56db;
+        }
+
+        .file-ref {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- COVER -->
+    <div class="cover">
+        <h1>🔐 Authentication, Security & Encryption</h1>
+        <div class="subtitle">MedCare Assist — Complete Security Documentation</div>
+        <div class="meta">
+            Project: MedCare Assist (Pharmacy Management System)<br>
+            Stack: React (Vite) + PHP (PDO) + MySQL<br>
+            Document Date: September 2026
+        </div>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc">
+        <h2>📋 Table of Contents</h2>
+        <ol>
+            <li><a href="#s1">Password Encryption (Argon2id Hashing)</a></li>
+            <li><a href="#s2">Session-Based Authentication (Secure Cookies)</a></li>
+            <li><a href="#s3">Role-Based Access Control (RBAC) — Authorization</a></li>
+            <li><a href="#s4">Cryptographically Secure Token Generation (CSPRNG)</a></li>
+            <li><a href="#s5">SQL Injection Prevention (PDO Prepared Statements)</a></li>
+            <li><a href="#s6">Cross-Origin Resource Sharing (CORS) Protection</a></li>
+            <li><a href="#s7">File Upload Security</a></li>
+            <li><a href="#s8">Database Transaction Security (Row-Level Locking)</a></li>
+            <li><a href="#s9">Input Validation & Sanitization</a></li>
+            <li><a href="#s10">Email Security (SMTP/TLS Encryption)</a></li>
+            <li><a href="#s11">Sensitive Data Protection</a></li>
+            <li><a href="#s12">Summary of All Security Methods</a></li>
+        </ol>
+    </div>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+        <h2><span class="num">1</span> Password Encryption (Hashing)</h2>
+
+        <h3>🔐 Algorithm: PASSWORD_ARGON2ID</h3>
+        <p>Argon2id is the <strong>strongest password hashing algorithm</strong> available in PHP. It was the winner of the Password Hashing Competition (PHC) and is resistant to both GPU-based brute-force attacks and side-channel (timing) attacks.</p>
+        
+        <div class="info-box">
+            <strong>How it works:</strong> Converts plain-text passwords into irreversible, one-way hashes using memory-hard computation. Even if the database is leaked, attackers cannot recover original passwords.
+        </div>
+
+        <table>
+            <thead><tr><th>File</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><span class="file-ref">api/auth/register_patient.php</span></td><td>Hashing password during patient registration</td></tr>
+                <tr><td><span class="file-ref">api/auth/register_pharmacy.php</span></td><td>Hashing password during pharmacy owner registration</td></tr>
+                <tr><td><span class="file-ref">api/auth/register_pharmacist.php</span></td><td>Hashing password during pharmacist registration</td></tr>
+                <tr><td><span class="file-ref">api/auth/register.php</span></td><td>Generic registration hashing</td></tr>
+                <tr><td><span class="file-ref">api/superadmin/create_admin.php</span></td><td>Hashing when superadmin creates an admin account</td></tr>
+                <tr><td><span class="file-ref">api/pharmacist/create_staff.php</span></td><td>Hashing when pharmacist creates stock manager staff</td></tr>
+                <tr><td><span class="file-ref">services/PharmacistService.php</span></td><td>Hashing password when creating staff via service layer</td></tr>
+                <tr><td><span class="file-ref">models/PharmacyOwner.php</span></td><td>Hashing password in PharmacyOwner OOP model</td></tr>
+            </tbody>
+        </table>
+
+        <h3>🔑 Password Verification: <code>password_verify()</code></h3>
+        <p>Compares the user-entered password against the stored hash during login — <strong>without ever decrypting</strong> the hash.</p>
+
+        <table>
+            <thead><tr><th>File</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><span class="file-ref">api/auth/login.php</span></td><td>Verifying password during login</td></tr>
+                <tr><td><span class="file-ref">models/User.php</span></td><td>Verifying password in OOP User model login</td></tr>
+                <tr><td><span class="file-ref">api/shared/update_profile.php</span></td><td>Verifying current password before allowing password change</td></tr>
+                <tr><td><span class="file-ref">api/shared/delete_account.php</span></td><td>Verifying password before account deletion</td></tr>
+            </tbody>
+        </table>
+
+        <h3>✅ Password Strength Validation (Server-Side Regex)</h3>
+        <p>Enforces strong passwords before hashing. <strong>Rule:</strong> Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 number, 1 special character.</p>
+        <pre><code>preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password)</code></pre>
+        <table>
+            <thead><tr><th>File</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><span class="file-ref">api/auth/register_patient.php</span></td><td>Validate password on patient registration</td></tr>
+                <tr><td><span class="file-ref">api/auth/reset_password.php</span></td><td>Validate new password on password reset</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+        <h2><span class="num">2</span> Session-Based Authentication (Secure Cookies)</h2>
+        <p>The system uses <strong>server-side PHP sessions</strong> for authentication. When a user logs in, a session is created on the server and a session cookie (<code>PHPSESSID</code>) is sent to the browser automatically.</p>
+
+        <h3>🍪 Session Cookie Security Settings</h3>
+        <p>All settings are configured in <span class="file-ref">config/auto_auth.php</span></p>
+        <table>
+            <thead><tr><th>Setting</th><th>Value</th><th>Protection Against</th></tr></thead>
+            <tbody>
+                <tr><td><code>session.cookie_httponly</code></td><td><span class="badge badge-green">1 (Enabled)</span></td><td><strong>XSS Attacks</strong> — Prevents JavaScript from reading the session cookie</td></tr>
+                <tr><td><code>session.cookie_secure</code></td><td><span class="badge badge-green">1 (Enabled)</span></td><td><strong>Man-in-the-Middle</strong> — Cookie only sent over HTTPS</td></tr>
+                <tr><td><code>session.cookie_samesite</code></td><td><span class="badge badge-blue">Lax</span></td><td><strong>CSRF Attacks</strong> — Cookie not sent with cross-origin requests</td></tr>
+                <tr><td><code>session.use_strict_mode</code></td><td><span class="badge badge-green">1 (Enabled)</span></td><td><strong>Session Fixation</strong> — Rejects uninitialized session IDs</td></tr>
+            </tbody>
+        </table>
+
+        <h3>🔗 Frontend Credential Sending</h3>
+        <p>The React frontend sends the session cookie with every API request:</p>
+        <pre><code>// Frontend/src/services/apiClient.js
+const config = {
+    credentials: 'include',   // ← Sends session cookie with every request
+    headers: { 'Content-Type': 'application/json' },
+};</code></pre>
+        <table>
+            <thead><tr><th>File</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><span class="file-ref">Frontend/src/services/apiClient.js</span></td><td><code>credentials: 'include'</code> — sends session cookie with every fetch request</td></tr>
+                <tr><td><span class="file-ref">Frontend/src/context/AuthContext.jsx</span></td><td>Manages login state; stores user info in <code>localStorage</code> for UI display</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3" class="page-break">
+        <h2><span class="num">3</span> Role-Based Access Control (RBAC)</h2>
+        <p>Every API endpoint checks the user's role from the session before allowing access. Unauthorized users receive <code>HTTP 401</code> (Unauthorized) or <code>HTTP 403</code> (Forbidden).</p>
+
+        <h3>🛡️ Middleware Functions</h3>
+        <p>Defined in <span class="file-ref">config/auto_auth.php</span></p>
+        <table>
+            <thead><tr><th>Function</th><th>Allowed Roles</th><th>Used In</th></tr></thead>
+            <tbody>
+                <tr><td><code>require_admin()</code></td><td><span class="badge badge-red">admin</span> <span class="badge badge-purple">superadmin</span></td><td>All <code>api/admin/</code> endpoints</td></tr>
+                <tr><td><code>require_pharmacist()</code></td><td><span class="badge badge-blue">pharmacist</span></td><td>All <code>api/pharmacist/</code> endpoints</td></tr>
+                <tr><td><code>require_patient()</code></td><td><span class="badge badge-green">patient</span></td><td>All <code>api/patient/</code> endpoints</td></tr>
+                <tr><td><code>require_pharmacy_owner()</code></td><td><span class="badge badge-yellow">pharmacy_owner</span></td><td>All <code>api/pharmacy/</code> endpoints</td></tr>
+                <tr><td><code>require_stock_manager()</code></td><td><span class="badge badge-purple">stock_manager</span></td><td>All <code>api/stock/</code> endpoints</td></tr>
+            </tbody>
+        </table>
+
+        <h3>📝 Example: Role Check in API Endpoint</h3>
+        <pre><code>// Every endpoint verifies session role before processing
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    http_response_code(403);
+    echo json_encode(["status" => "error", "message" => "Admin login session required"]);
+    exit();
+}</code></pre>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+        <h2><span class="num">4</span> Cryptographically Secure Token Generation</h2>
+
+        <h3>🎲 CSPRNG: <code>random_bytes()</code> + <code>bin2hex()</code></h3>
+        <p>Used to generate <strong>cryptographically secure random tokens</strong> for password reset. These tokens are unpredictable and impossible to guess.</p>
+        <pre><code>// Generates a 64-character hexadecimal token
+$token = bin2hex(random_bytes(32));</code></pre>
+        <table>
+            <thead><tr><th>File</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><span class="file-ref">models/User.php</span></td><td>Generates 64-char password reset token</td></tr>
+                <tr><td><span class="file-ref">models/MedicalLocker.php</span></td><td>Generates secure random filenames for medical documents</td></tr>
+            </tbody>
+        </table>
+
+        <h3>⏰ Token Expiry (Time-Limited Tokens)</h3>
+        <p>Password reset tokens expire after <strong>5 minutes</strong> to prevent replay attacks.</p>
+        <pre><code>-- Setting expiry (models/User.php)
+UPDATE users SET reset_token = :token, 
+    reset_token_expiry = DATE_ADD(NOW(), INTERVAL 5 MINUTE) WHERE email = :email
+
+-- Validating expiry
+SELECT user_id FROM users WHERE reset_token = :token AND reset_token_expiry > NOW()
+
+-- Clearing after use (one-time use)
+UPDATE users SET password_hash = :hash, reset_token = NULL, reset_token_expiry = NULL</code></pre>
+
+        <h3>🔢 Pickup PIN Generation</h3>
+        <p>Random 4-digit PINs are generated using <code>random_int()</code> for secure order pickup verification.</p>
+        <pre><code>$pickup_pin = str_pad(random_int(1000, 9999), 4, '0', STR_PAD_LEFT);</code></pre>
+        <table>
+            <thead><tr><th>File</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><span class="file-ref">api/pharmacist/generate_order_bill.php</span></td><td>Generates pickup verification PIN for orders</td></tr>
+                <tr><td><span class="file-ref">services/PharmacistService.php</span></td><td>Generates and verifies PINs for orders & reservations</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="s5">
+        <h2><span class="num">5</span> SQL Injection Prevention</h2>
+
+        <h3>🛡️ PDO Prepared Statements with Parameter Binding</h3>
+        <p><strong>Every single database query</strong> in the project uses PDO Prepared Statements. This completely prevents SQL Injection attacks by separating SQL code from user data.</p>
+
+        <pre><code>// ✅ SAFE — Used throughout the entire project (Parameterized)
+$stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+$stmt->execute([':email' => $email]);
+
+// ❌ UNSAFE — NEVER used in this project (String concatenation)
+$stmt = $db->query("SELECT * FROM users WHERE email = '$email'");</code></pre>
+
+        <h3>⚙️ PDO Security Configuration</h3>
+        <p>Defined in <span class="file-ref">config/Database.php</span> (Singleton Pattern)</p>
+        <table>
+            <thead><tr><th>Setting</th><th>Value</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td><code>ATTR_EMULATE_PREPARES</code></td><td><span class="badge badge-red">false</span></td><td>Forces <strong>real</strong> prepared statements (not emulated) — true server-side protection</td></tr>
+                <tr><td><code>ATTR_ERRMODE</code></td><td><span class="badge badge-green">EXCEPTION</span></td><td>Throws exceptions on SQL errors instead of silent failures</td></tr>
+                <tr><td><code>ATTR_DEFAULT_FETCH_MODE</code></td><td><span class="badge badge-blue">FETCH_ASSOC</span></td><td>Returns associative arrays (clean data handling)</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="s6" class="page-break">
+        <h2><span class="num">6</span> CORS (Cross-Origin Resource Sharing) Protection</h2>
+
+        <h3>🌐 Origin Whitelist</h3>
+        <p>Only requests from approved origins are accepted. Prevents unauthorized websites from making API calls to the backend.</p>
+        <p>Defined in <span class="file-ref">config/cors.php</span></p>
+
+        <pre><code>$allowed_origins = [
+    'http://localhost:5173',     // React Dev Server
+    'http://127.0.0.1:5173',    // Alternative localhost
+    'http://localhost'           // Production
+];
+
+header("Access-Control-Allow-Credentials: true");   // Allow session cookies
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");</code></pre>
+
+        <div class="info-box">
+            <strong>Preflight Handling:</strong> The server responds to <code>OPTIONS</code> preflight requests with <code>HTTP 200</code> and exits — required for CORS with credentials.
+        </div>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section id="s7">
+        <h2><span class="num">7</span> File Upload Security</h2>
+        <p>Multiple layers of protection are applied for all uploaded files (prescriptions, medical documents, avatars).</p>
+
+        <table>
+            <thead><tr><th>Security Measure</th><th>Implementation</th><th>File</th></tr></thead>
+            <tbody>
+                <tr><td><strong>File extension whitelist</strong></td><td>Only <code>pdf, jpg, jpeg, png</code> allowed</td><td><span class="file-ref">api/patient/upload_prescription.php</span></td></tr>
+                <tr><td><strong>File size limit</strong></td><td>Maximum 5MB per file</td><td><span class="file-ref">models/MedicalLocker.php</span></td></tr>
+                <tr><td><strong>Secure random filenames</strong></td><td><code>bin2hex(random_bytes(16))</code> — prevents directory traversal</td><td><span class="file-ref">models/MedicalLocker.php</span></td></tr>
+                <tr><td><strong>.htaccess protection</strong></td><td><code>Require all denied</code> — blocks direct URL access to files</td><td><span class="file-ref">models/MedicalLocker.php</span></td></tr>
+                <tr><td><strong>Directory indexing disabled</strong></td><td><code>Options -Indexes</code> — prevents listing directory contents</td><td><span class="file-ref">models/MedicalLocker.php</span></td></tr>
+            </tbody>
+        </table>
+
+        <pre><code>// Secure filename generation (models/MedicalLocker.php)
+$secureFilename = bin2hex(random_bytes(16)) . '_' . time() . '.' . $fileExt;
+
+// .htaccess auto-created to block direct access
+file_put_contents($storageDir . '.htaccess', "Require all denied\nOptions -Indexes");</code></pre>
+    </section>
+
+    <!-- SECTION 8 -->
+    <section id="s8">
+        <h2><span class="num">8</span> Database Transaction Security (Concurrency Control)</h2>
+
+        <h3>🔒 <code>SELECT ... FOR UPDATE</code> (Row-Level Locking)</h3>
+        <p>Prevents <strong>race conditions</strong> when multiple users try to modify the same record simultaneously (e.g., two pharmacists claiming the same reservation, or concurrent payment processing).</p>
+
+        <pre><code>$db->beginTransaction();
+
+// Lock the row — other transactions must wait
+$stmt = $db->prepare(
+    "SELECT pharmacy_id, status FROM reservations 
+     WHERE reservation_id = :rid FOR UPDATE"
+);
+$stmt->execute([':rid' => $reservationId]);
+
+// ... safely modify data ...
+
+$db->commit();  // Release lock</code></pre>
+
+        <table>
+            <thead><tr><th>File</th><th>Usage</th></tr></thead>
+            <tbody>
+                <tr><td><span class="file-ref">services/PharmacistService.php</span></td><td>Locking reservations during claim, bill generation, and pickup verification</td></tr>
+                <tr><td><span class="file-ref">api/pharmacist/generate_order_bill.php</span></td><td>Locking orders during bill generation</td></tr>
+                <tr><td><span class="file-ref">api/pharmacist/deduct_stock.php</span></td><td>Locking inventory rows during stock deduction</td></tr>
+                <tr><td><span class="file-ref">api/pharmacist/verify_and_complete_order.php</span></td><td>Locking during order completion and PIN verification</td></tr>
+                <tr><td><span class="file-ref">api/payment/payhere_notify.php</span></td><td>Locking reservation during payment callback processing</td></tr>
+                <tr><td><span class="file-ref">api/patient/locker_delete.php</span></td><td>Locking medical document before deletion</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 9 -->
+    <section id="s9" class="page-break">
+        <h2><span class="num">9</span> Input Validation & Sanitization</h2>
+
+        <table>
+            <thead><tr><th>Validation Type</th><th>Method</th><th>Files</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Email format</strong></td><td><code>filter_var($email, FILTER_VALIDATE_EMAIL)</code></td><td><span class="file-ref">api/auth/register_patient.php</span></td></tr>
+                <tr><td><strong>Phone number</strong></td><td><code>preg_match('/^[0-9]{10}$/')</code> — exactly 10 digits</td><td><span class="file-ref">api/auth/register_patient.php</span></td></tr>
+                <tr><td><strong>Password strength</strong></td><td>Regex: 8+ chars, uppercase, lowercase, number, special char</td><td><span class="file-ref">api/auth/register_patient.php</span>, <span class="file-ref">api/auth/reset_password.php</span></td></tr>
+                <tr><td><strong>XSS output encoding</strong></td><td><code>htmlspecialchars()</code></td><td><span class="file-ref">api/admin/update_feedback_status.php</span></td></tr>
+                <tr><td><strong>Input trimming</strong></td><td><code>trim()</code> on all string inputs</td><td>All registration & form endpoints</td></tr>
+                <tr><td><strong>Type casting</strong></td><td><code>(int)</code>, <code>(float)</code> on numeric inputs</td><td>All endpoints processing IDs and amounts</td></tr>
+                <tr><td><strong>Duplicate email check</strong></td><td>SELECT before INSERT to prevent duplicates</td><td>All registration endpoints</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 10 -->
+    <section id="s10">
+        <h2><span class="num">10</span> Email Security (SMTP/TLS Encryption)</h2>
+        <p>Password reset emails are sent using <strong>PHPMailer</strong> with Gmail SMTP and TLS/SSL encryption.</p>
+        <p>Configured in <span class="file-ref">api/auth/request_reset.php</span></p>
+
+        <table>
+            <thead><tr><th>Setting</th><th>Value</th><th>Purpose</th></tr></thead>
+            <tbody>
+                <tr><td><strong>SMTP Host</strong></td><td><code>smtp.gmail.com</code></td><td>Gmail's SMTP server</td></tr>
+                <tr><td><strong>SMTP Authentication</strong></td><td><code>SMTPAuth = true</code></td><td>Requires Gmail credentials to send</td></tr>
+                <tr><td><strong>Encryption</strong></td><td><code>ENCRYPTION_SMTPS</code> (SSL)</td><td>Encrypts entire email transmission</td></tr>
+                <tr><td><strong>Port</strong></td><td><code>465</code></td><td>SSL encrypted SMTP port</td></tr>
+                <tr><td><strong>App Password</strong></td><td>Gmail App Password used</td><td>Not the real Gmail password — limited-scope credential</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 11 -->
+    <section id="s11">
+        <h2><span class="num">11</span> Sensitive Data Protection</h2>
+
+        <table>
+            <thead><tr><th>Protection</th><th>Description</th><th>File</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Pickup PIN hidden from pharmacist</strong></td><td><code>unset($header_context['pickup_pin'])</code> — pharmacist cannot see patient's verification PIN in chat context</td><td><span class="file-ref">api/shared/get_reservation_chat.php</span></td></tr>
+                <tr><td><strong>Password never in API response</strong></td><td>Login response never includes <code>password_hash</code> field</td><td><span class="file-ref">api/auth/login.php</span></td></tr>
+                <tr><td><strong>Soft delete (account suspension)</strong></td><td>Accounts are suspended (<code>account_status = 'suspended'</code>), not deleted — preserves audit trail</td><td><span class="file-ref">api/auth/login.php</span></td></tr>
+                <tr><td><strong>Token cleared after use</strong></td><td>Reset tokens set to <code>NULL</code> after successful password reset — one-time use only</td><td><span class="file-ref">models/User.php</span></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 12: SUMMARY -->
+    <section id="s12" class="page-break">
+        <h2><span class="num">12</span> Complete Summary of All Security Methods</h2>
+
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Security Method</th>
+                    <th>Category</th>
+                    <th>Key Files</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Argon2id Password Hashing</td>
+                    <td><span class="badge badge-red">Encryption</span></td>
+                    <td><code>register_*.php</code>, <code>User.php</code>, <code>PharmacyOwner.php</code></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Secure Session Cookies</td>
+                    <td><span class="badge badge-green">Authentication</span></td>
+                    <td><code>auto_auth.php</code>, <code>apiClient.js</code></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Role-Based Access Control (RBAC)</td>
+                    <td><span class="badge badge-blue">Authorization</span></td>
+                    <td><code>auto_auth.php</code>, all <code>api/</code> endpoints</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>CSPRNG Token Generation</td>
+                    <td><span class="badge badge-red">Encryption</span></td>
+                    <td><code>User.php</code>, <code>MedicalLocker.php</code></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Token Expiry (5 min)</td>
+                    <td><span class="badge badge-green">Authentication</span></td>
+                    <td><code>User.php</code></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>PDO Prepared Statements</td>
+                    <td><span class="badge badge-yellow">SQL Injection Prevention</span></td>
+                    <td><code>Database.php</code>, all models & endpoints</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>CORS Origin Whitelist</td>
+                    <td><span class="badge badge-blue">Access Control</span></td>
+                    <td><code>cors.php</code></td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>File Upload Security</td>
+                    <td><span class="badge badge-purple">File Protection</span></td>
+                    <td><code>MedicalLocker.php</code>, <code>upload_prescription.php</code></td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Row-Level Locking (FOR UPDATE)</td>
+                    <td><span class="badge badge-yellow">Concurrency Control</span></td>
+                    <td><code>PharmacistService.php</code>, transaction endpoints</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Input Validation & Sanitization</td>
+                    <td><span class="badge badge-blue">Data Integrity</span></td>
+                    <td>All registration & form endpoints</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>SMTP/TLS Email Encryption</td>
+                    <td><span class="badge badge-red">Communication Security</span></td>
+                    <td><code>request_reset.php</code></td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Sensitive Data Masking</td>
+                    <td><span class="badge badge-purple">Data Protection</span></td>
+                    <td><code>get_reservation_chat.php</code>, <code>login.php</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="footer">
+        MedCare Assist — Security & Authentication Documentation &copy; 2026<br>
+        <em>This document was auto-generated for project reference.</em>
+    </div>
+
+</div>
+
+</body>
+</html>
